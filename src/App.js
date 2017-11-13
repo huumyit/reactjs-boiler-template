@@ -3,6 +3,15 @@ import './App.css';
 import Product from './components/Product';
 
 class App extends Component {
+
+  onClick() {
+    alert('Day la app component!');
+  }
+
+  onClick2(text) {
+    alert(text);
+  }
+
   render() {
 
     let products = [
@@ -18,14 +27,14 @@ class App extends Component {
         name: 'Samsung Galaxy Note 7',
         price: 20000000,
         image: 'https://s7d2.scene7.com/is/image/SamsungUS/Pdpkeyfeature-sm-g930tzdatmb-600x600-C1-062016?$product-details-jpg$',
-        status: false
+        status: true
       },
       {
         id: 3,
         name: 'Oppo F1s',
         price: 20000000,
         image: 'https://my-live-02.slatic.net/p/2/oppo-f1s-selfie-expert-32gb-gold-1473903143-89584831-ddb747820966260bb10b56fcd237360b-product.jpg',
-        status: true
+        status: false
       }
     ];
 
@@ -66,6 +75,13 @@ class App extends Component {
         </nav>
 
         {elements}
+        <br />
+
+        <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+          <button type="button" className="btn btn-primary" onClick={ this.onClick}>Click Me!</button>
+          <button type="button" className="btn btn-success" onClick={ () => {this.onClick2('ABC')}}>Click Me2 !</button>
+        </div>
+
       </div>
     );
   }

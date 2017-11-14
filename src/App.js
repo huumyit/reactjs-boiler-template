@@ -4,12 +4,21 @@ import Product from './components/Product';
 
 class App extends Component {
 
+  // constructor(props) {
+  //   super(props);
+  //   this.onAddProduct = this.onAddProduct.bind(this);
+  // }
+
   onClick() {
     alert('Day la app component!');
   }
 
   onClick2(text) {
     alert(text);
+  }
+
+  onAddProduct = () => {
+    alert(this.refs.name.value);
   }
 
   render() {
@@ -74,6 +83,22 @@ class App extends Component {
           </div>
         </nav>
 
+        
+        <div className="row">
+          <div className="col-xs-12 col-sm-12 col-md-8 col-md-offset-2">
+            <form action="#" method="POST" role="form">
+              <legend>Add product</legend>
+              <div className="form-group">
+                <label>Name</label>
+                <input type="text" className="form-control" placeholder="Input field" ref="name"/>
+              </div>
+              <button type="submit" className="btn btn-primary" onClick={this.onAddProduct}>Add</button>
+            </form>
+          </div>
+        </div>
+        <br/>
+        
+        
         {elements}
         <br />
 

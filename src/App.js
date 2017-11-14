@@ -1,61 +1,71 @@
 import React, { Component } from 'react';
 import './App.css';
-import Product from './components/Product';
+// import Product from './components/Product';
 
 class App extends Component {
 
-  // constructor(props) {
-  //   super(props);
-  //   this.onAddProduct = this.onAddProduct.bind(this);
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      products : [
+        {
+          id: 1,
+          name: 'iPhone X',
+          price: 20000000,
+          image: 'https://cdn.macrumors.com/article-new/2017/09/iphonexdesign-1-800x597.jpg',
+          status: true
+        },
+        {
+          id: 2,
+          name: 'Samsung Galaxy Note 7',
+          price: 20000000,
+          image: 'https://s7d2.scene7.com/is/image/SamsungUS/Pdpkeyfeature-sm-g930tzdatmb-600x600-C1-062016?$product-details-jpg$',
+          status: true
+        },
+        {
+          id: 3,
+          name: 'Oppo F1s',
+          price: 20000000,
+          image: 'https://my-live-02.slatic.net/p/2/oppo-f1s-selfie-expert-32gb-gold-1473903143-89584831-ddb747820966260bb10b56fcd237360b-product.jpg',
+          status: true
+        }
+      ],
+      isActive: true
+    };
 
-  onClick() {
-    alert('Day la app component!');
+    // this.onSetState = this.onSetState.bind(this);
   }
 
-  onClick2(text) {
-    alert(text);
-  }
+  onSetState = () => {
+    // if(this.state.isActive === true) {
+    //   this.setState({
+    //     isActive : false
+    //   });
+    // }else {
+    //   this.setState({
+    //     isActive : true
+    //   });
+    // }
 
-  onAddProduct = () => {
-    alert(this.refs.name.value);
+    this.setState({
+      isActive : !this.state.isActive
+    });
   }
 
   render() {
 
-    let products = [
-      {
-        id: 1,
-        name: 'iPhone X',
-        price: 20000000,
-        image: 'https://cdn.macrumors.com/article-new/2017/09/iphonexdesign-1-800x597.jpg',
-        status: true
-      },
-      {
-        id: 2,
-        name: 'Samsung Galaxy Note 7',
-        price: 20000000,
-        image: 'https://s7d2.scene7.com/is/image/SamsungUS/Pdpkeyfeature-sm-g930tzdatmb-600x600-C1-062016?$product-details-jpg$',
-        status: true
-      },
-      {
-        id: 3,
-        name: 'Oppo F1s',
-        price: 20000000,
-        image: 'https://my-live-02.slatic.net/p/2/oppo-f1s-selfie-expert-32gb-gold-1473903143-89584831-ddb747820966260bb10b56fcd237360b-product.jpg',
-        status: false
-      }
-    ];
-
-    let elements = products.map((product, index) => {
+    let elements = this.state.products.map((product, index) => {
       let result = '';
       if (product.status) {
-        result =  <Product
-                    key={product.id}
-                    image={product.image}
-                    name={product.name}
-                    price={product.price}
-                  />
+        result =  <tbody key={product.id}>
+                    <tr>
+                      <td>{product.id}</td>
+                      <td>{product.name}</td>
+                      <td>
+                        <span className="label label-success">{product.price}</span>
+                      </td>
+                    </tr>
+                  </tbody>
       }
       return result;
     });
@@ -82,31 +92,28 @@ class App extends Component {
             </div>
           </div>
         </nav>
-
+        
         
         <div className="row">
-          <div className="col-xs-12 col-sm-12 col-md-8 col-md-offset-2">
-            <form action="#" method="POST" role="form">
-              <legend>Add product</legend>
-              <div className="form-group">
-                <label>Name</label>
-                <input type="text" className="form-control" placeholder="Input field" ref="name"/>
-              </div>
-              <button type="submit" className="btn btn-primary" onClick={this.onAddProduct}>Add</button>
-            </form>
+          <div className="col-xs-12 col-sm-12 col-md-10 col-md-offset-1">
+            <table className="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Name</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              {elements}
+            </table>
+            <br/>
+
+            <button type="button" className="btn btn-primary" onClick={this.onSetState}>
+              Active: {this.state.isActive === true ? 'true' : 'false'}
+            </button>
+
+            </div>
           </div>
-        </div>
-        <br/>
-        
-        
-        {elements}
-        <br />
-
-        <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-          <button type="button" className="btn btn-primary" onClick={ this.onClick}>Click Me!</button>
-          <button type="button" className="btn btn-success" onClick={ () => {this.onClick2('ABC')}}>Click Me2 !</button>
-        </div>
-
       </div>
     );
   }

@@ -1,113 +1,109 @@
 import React, { Component } from 'react';
 import './App.css';
-import Product from './components/Product';
+import TackForm from './components/TackForm';
+import Control from './components/Control';
+import TackList from './components/TackList';
 
 class App extends Component {
-
-  // constructor(props) {
-  //   super(props);
-  //   this.onAddProduct = this.onAddProduct.bind(this);
-  // }
-
-  onClick() {
-    alert('Day la app component!');
+  constructor(props) {
+    super(props);
+    this.state = {
+      tasks : [],
+      isDisplayForm: false
+    };
   }
 
-  onClick2(text) {
-    alert(text);
+  componentWillMount() {
+    if(localStorage && localStorage.getItem('tasks')) {
+      var tasks = JSON.parse(localStorage.getItem('tasks'));
+      this.setState({
+        tasks: tasks
+      });
+    }
   }
 
-  onAddProduct = () => {
-    alert(this.refs.name.value);
-  }
-
-  render() {
-
-    let products = [
+  onGenerateData = () => {
+    var tasks = [
       {
-        id: 1,
-        name: 'iPhone X',
-        price: 20000000,
-        image: 'https://cdn.macrumors.com/article-new/2017/09/iphonexdesign-1-800x597.jpg',
+        id: this.generateID(),
+        name: 'Nguyen Van A',
+        status: false
+      },
+      {
+        id: this.generateID(),
+        name: 'Nguyen Van B',
         status: true
       },
       {
-        id: 2,
-        name: 'Samsung Galaxy Note 7',
-        price: 20000000,
-        image: 'https://s7d2.scene7.com/is/image/SamsungUS/Pdpkeyfeature-sm-g930tzdatmb-600x600-C1-062016?$product-details-jpg$',
-        status: true
-      },
-      {
-        id: 3,
-        name: 'Oppo F1s',
-        price: 20000000,
-        image: 'https://my-live-02.slatic.net/p/2/oppo-f1s-selfie-expert-32gb-gold-1473903143-89584831-ddb747820966260bb10b56fcd237360b-product.jpg',
+        id: this.generateID(),
+        name: 'Nguyen Van C',
         status: false
       }
     ];
 
-    let elements = products.map((product, index) => {
-      let result = '';
-      if (product.status) {
-        result =  <Product
-                    key={product.id}
-                    image={product.image}
-                    name={product.name}
-                    price={product.price}
-                  />
-      }
-      return result;
+    this.setState({
+      tasks: tasks
     });
 
+    // set localStorage on browser and convert object to JSON
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+
+  // random key ID
+  s4() {
+    return Math.floor(( 1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+
+  generateID() {
     return (
-      <div>
-        <nav className="navbar navbar-default" role="navigation">
-          <div className="container-fluid">
-            <div className="navbar-header">
-              <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span className="sr-only">Toggle navigation</span>
-                <span className="icon-bar" />
-                <span className="icon-bar" />
-                <span className="icon-bar" />
-              </button>
-              <a className="navbar-brand">Components</a>
-            </div>
-            <div className="collapse navbar-collapse navbar-ex1-collapse">
-              <ul className="nav navbar-nav">
-                <li className="active"><a>Home</a></li>
-                <li><a>Abouts</a></li>
-                <li><a>Products</a></li>
-              </ul>
-            </div>
-          </div>
-        </nav>
+      this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4()
+    )
+  }
 
-        
-        <div className="row">
-          <div className="col-xs-12 col-sm-12 col-md-8 col-md-offset-2">
-            <form action="#" method="POST" role="form">
-              <legend>Add product</legend>
-              <div className="form-group">
-                <label>Name</label>
-                <input type="text" className="form-control" placeholder="Input field" ref="name"/>
-              </div>
-              <button type="submit" className="btn btn-primary" onClick={this.onAddProduct}>Add</button>
-            </form>
+  onToggleForm = () => {
+    this.setState({
+      isDisplayForm: !this.state.isDisplayForm
+    });
+  }
+
+  onCloseForm = () => {
+    this.setState({
+      isDisplayForm: false
+    });
+  }
+
+  render() {
+    // parameter according to ES6
+    var {tasks, isDisplayForm} = this.state; // var tasks = this.state.tasks
+    var elmTaskForm = isDisplayForm ? <TackForm onCloseForm={this.onCloseForm} /> : '';
+
+    return (
+      <div className="container mt-50">
+          <div className="row">
+            <div className={ isDisplayForm ? 'col-xs-4 col-sm-4 col-md-4 col-lg-4' : ''} >
+              {/* <TackForm /> */}
+              {elmTaskForm}
+            </div>
+
+            <div className={ isDisplayForm ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12'} >
+              
+              {/* <button 
+                type="button" 
+                className="btn btn-large btn-danger"
+                onClick={this.onGenerateData}
+              >
+              Generate Data
+            </button>
+              <br/>
+              <br/> */}
+              
+              <Control onToggleForm={this.onToggleForm} />
+
+              <TackList tasks={tasks} />
+            </div>
+
           </div>
         </div>
-        <br/>
-        
-        
-        {elements}
-        <br />
-
-        <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-          <button type="button" className="btn btn-primary" onClick={ this.onClick}>Click Me!</button>
-          <button type="button" className="btn btn-success" onClick={ () => {this.onClick2('ABC')}}>Click Me2 !</button>
-        </div>
-
-      </div>
     );
   }
 }

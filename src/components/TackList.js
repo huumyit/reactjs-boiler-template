@@ -4,10 +4,17 @@ import TackItem from './TackItem';
 class TackList extends Component {
   render() {
 
-    var {tasks} = this.props; // var tasks = this.props.tasks;
+    var { tasks } = this.props; // var tasks = this.props.tasks;
     var elmTasks = tasks.map((task,index) => {
         return (
-            <TackItem  key={task.id} index={index} task={task} />
+            <TackItem 
+                key={task.id} 
+                index={index} 
+                task={task} 
+                onUpdateStatus={this.props.onUpdateStatus}
+                onDelete={this.props.onDelete}
+                onUpdate={this.props.onUpdate}
+             />
         );
     });
     return (
@@ -30,9 +37,9 @@ class TackList extends Component {
                     </td>
                     <td>
                         <select className="form-control" name="status">
-                            <option value="{true}">All</option>
-                            <option value="{true}">Hide</option>
-                            <option value="{false}">Show</option>
+                            <option value={true}>All</option>
+                            <option value={true}>Hide</option>
+                            <option value={false}>Show</option>
                         </select>
                     </td>
                     <td />

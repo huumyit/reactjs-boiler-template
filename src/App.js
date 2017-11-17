@@ -14,7 +14,8 @@ class App extends Component {
       filter: {
         name: '',
         status: -1 // all: -1, active: 1, deactive: 0
-      }
+      },
+      keyword: ''
     };
   }
 
@@ -175,26 +176,38 @@ class App extends Component {
     });
   }
 
+  onSearch = (keyword) => {
+    this.setState({
+      keyword: keyword
+    });
+  }
+
   render() {
     // parameter according to ES6
-    var {tasks, isDisplayForm, taskEditing, filter} = this.state; // var tasks = this.state.tasks
+    var {tasks, isDisplayForm, taskEditing, filter, keyword} = this.state; // var tasks = this.state.tasks
 
+    console.log(keyword);
     if (filter) {
       if (filter.name) {
         tasks = tasks.filter((task) => {
           return task.name.toLowerCase().indexOf(filter.name) !== -1;
         });
       }
+      // if (filter.status) // !== null, !== undefined, !== 0
+      tasks= tasks.filter((task) => {
+        if (filter.status === -1) {
+          return task;
+        } else {
+          return task.status === (filter.status === 1 ? true : false);
+        }
+      });
     }
 
-    // if (filter.status) // !== null, !== undefined, !== 0
-    tasks= tasks.filter((task) => {
-      if (filter.status === -1) {
-        return task;
-      } else {
-        return task.status === (filter.status === 1 ? true : false);
-      }
-    });
+    if (keyword) {
+      tasks = tasks.filter((task) => {
+        return task.name.toLowerCase().indexOf(keyword) !== -1; // Returns -1 if the item is not found.
+      });
+    }
     
     var elmTaskForm = isDisplayForm 
         ? <TaskForm 
@@ -224,7 +237,10 @@ class App extends Component {
               <br/>
               <br/> */}
               
-              <Control onToggleForm={this.onToggleForm} />
+              <Control 
+                onToggleForm={this.onToggleForm} 
+                onSearch={this.onSearch}
+              />
 
               <TaskList 
                 tasks={tasks}  

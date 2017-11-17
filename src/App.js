@@ -15,7 +15,11 @@ class App extends Component {
         name: '',
         status: -1 // all: -1, active: 1, deactive: 0
       },
-      keyword: ''
+      keyword: '',
+      sort: {
+        by: 'name',
+        value: 1
+      }
     };
   }
 

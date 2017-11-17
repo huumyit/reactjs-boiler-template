@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import TackForm from './components/TackForm';
+import TaskForm from './components/TaskForm';
 import Control from './components/Control';
-import TackList from './components/TackList';
+import TaskList from './components/TaskList';
 
 class App extends Component {
   constructor(props) {
@@ -10,7 +10,11 @@ class App extends Component {
     this.state = {
       tasks : [],
       isDisplayForm: false,
-      taskEditing: null
+      taskEditing: null,
+      filter: {
+        name: '',
+        status: -1 // all: -1, active: 1, deactive: 0
+      }
     };
   }
 
@@ -21,10 +25,6 @@ class App extends Component {
         tasks: tasks
       });
     }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
   }
 
   onGenerateData = () => {
@@ -164,13 +164,40 @@ class App extends Component {
 
     this.onShowForm();
   }
-  
+
+  onFilter = (filterName, filterStatus) => {
+    filterStatus = parseInt(filterStatus, 10);
+    this.setState({
+      filter: {
+        name: filterName.toLowerCase(),
+        status: filterStatus
+      }
+    });
+  }
 
   render() {
     // parameter according to ES6
-    var {tasks, isDisplayForm, taskEditing} = this.state; // var tasks = this.state.tasks
+    var {tasks, isDisplayForm, taskEditing, filter} = this.state; // var tasks = this.state.tasks
+
+    if (filter) {
+      if (filter.name) {
+        tasks = tasks.filter((task) => {
+          return task.name.toLowerCase().indexOf(filter.name) !== -1;
+        });
+      }
+    }
+
+    // if (filter.status) // !== null, !== undefined, !== 0
+    tasks= tasks.filter((task) => {
+      if (filter.status === -1) {
+        return task;
+      } else {
+        return task.status === (filter.status === 1 ? true : false);
+      }
+    });
+    
     var elmTaskForm = isDisplayForm 
-        ? <TackForm 
+        ? <TaskForm 
             onCloseForm={this.onCloseForm} 
             onSubmit={this.onSubmit} 
             task={taskEditing}
@@ -199,11 +226,12 @@ class App extends Component {
               
               <Control onToggleForm={this.onToggleForm} />
 
-              <TackList 
+              <TaskList 
                 tasks={tasks}  
                 onUpdateStatus={this.onUpdateStatus} 
                 onDelete={this.onDelete}
                 onUpdate={this.onUpdate}
+                onFilter={this.onFilter}
               />
             </div>
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class TackItem extends Component {
+class TaskItem extends Component {
 
 	onUpdateStatus = () => {
 		this.props.onUpdateStatus(this.props.task.id);
@@ -20,7 +20,7 @@ class TackItem extends Component {
 
     return (
         <tr>
-            <td>{index}</td>
+            <td>{index + 1}</td>
             <td>{task.name}</td>
             <td>
                 <span 
@@ -52,4 +52,4 @@ class TackItem extends Component {
   }
 }
 
-export default TackItem;
+export default TaskItem;

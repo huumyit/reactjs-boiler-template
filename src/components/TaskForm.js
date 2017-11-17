@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class TackForm extends Component {
+class TaskForm extends Component {
 
 		constructor(props) {
 			super(props);
@@ -132,4 +132,4 @@ class TackForm extends Component {
   }
 }
 
-export default TackForm;
+export default TaskForm;

@@ -16,10 +16,12 @@ class App extends Component {
         status: -1 // all: -1, active: 1, deactive: 0
       },
       keyword: '',
-      sort: {
-        by: 'name',
-        value: 1
-      }
+      // sort: {
+      //   by: 'name',
+      //   value: 1
+      // }
+      sortBy: 'name',
+      sortValue: 1
     };
   }
 
@@ -98,7 +100,7 @@ class App extends Component {
 
   onSubmit = (data) => {
     var { tasks } = this.state; // tasks  = this.state.tasks;
-    
+
     if (data.id === '') {
       data.id = this.generateID(); // task
       tasks.push(data);
@@ -107,7 +109,7 @@ class App extends Component {
       var index = this.findIndex(data.id);
       tasks[index] = data;
     }
-    
+
     this.setState({
       tasks: tasks,
       taskEditing: null
@@ -125,9 +127,9 @@ class App extends Component {
       this.setState({
         tasks: tasks
       });
-      
+
       localStorage.setItem('tasks', JSON.stringify(tasks));
-    } 
+    }
   }
 
   findIndex = (id) => {
@@ -152,9 +154,9 @@ class App extends Component {
       this.setState({
         tasks: tasks
       });
-      
+
       localStorage.setItem('tasks', JSON.stringify(tasks));
-    } 
+    }
     this.onCloseForm();
   }
 
@@ -186,11 +188,27 @@ class App extends Component {
     });
   }
 
+  onSort = (sortBy, sortValue) => {
+
+    this.setState({
+      sortBy: sortBy,
+      sortValue: sortValue
+    });
+  }
+
   render() {
     // parameter according to ES6
-    var {tasks, isDisplayForm, taskEditing, filter, keyword} = this.state; // var tasks = this.state.tasks
+    var {
+      tasks,
+      isDisplayForm,
+      taskEditing,
+      filter,
+      keyword,
+      sortBy,
+      sortValue
+    } = this.state; // var tasks = this.state.tasks
 
-    console.log(keyword);
+
     if (filter) {
       if (filter.name) {
         tasks = tasks.filter((task) => {
@@ -212,13 +230,27 @@ class App extends Component {
         return task.name.toLowerCase().indexOf(keyword) !== -1; // Returns -1 if the item is not found.
       });
     }
-    
-    var elmTaskForm = isDisplayForm 
-        ? <TaskForm 
-            onCloseForm={this.onCloseForm} 
-            onSubmit={this.onSubmit} 
+
+    if (sortBy === 'name') {
+      tasks.sort((a,b) => {
+        if (a.name > b.name) return -sortValue;
+        else if (a.name < b.name) return sortValue;
+        else return 0;
+      });
+    }else {
+      tasks.sort((a,b) => {
+        if (a.status > b.status) return -sortValue;
+        else if (a.status < b.status) return sortValue;
+        else return 0;
+      });
+    }
+
+    var elmTaskForm = isDisplayForm
+        ? <TaskForm
+            onCloseForm={this.onCloseForm}
+            onSubmit={this.onSubmit}
             task={taskEditing}
-          /> 
+          />
         : '';
 
     return (
@@ -230,9 +262,9 @@ class App extends Component {
             </div>
 
             <div className={ isDisplayForm ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12'} >
-              
-              {/* <button 
-                type="button" 
+
+              {/* <button
+                type="button"
                 className="btn btn-large btn-danger"
                 onClick={this.onGenerateData}
               >
@@ -240,15 +272,18 @@ class App extends Component {
             </button>
               <br/>
               <br/> */}
-              
-              <Control 
-                onToggleForm={this.onToggleForm} 
+
+              <Control
+                onToggleForm={this.onToggleForm}
                 onSearch={this.onSearch}
+                onSort={this.onSort}
+                sortBy={sortBy}
+                sortValue={sortValue}
               />
 
-              <TaskList 
-                tasks={tasks}  
-                onUpdateStatus={this.onUpdateStatus} 
+              <TaskList
+                tasks={tasks}
+                onUpdateStatus={this.onUpdateStatus}
                 onDelete={this.onDelete}
                 onUpdate={this.onUpdate}
                 onFilter={this.onFilter}

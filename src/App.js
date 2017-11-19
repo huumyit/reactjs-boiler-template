@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash'; //All function of the lodash
 import './App.css';
 import TaskForm from './components/TaskForm';
 import Control from './components/Control';
@@ -121,7 +122,12 @@ class App extends Component {
 
   onUpdateStatus = (id) => {
     var {tasks} = this.state;
-    var index = this.findIndex(id);
+    // var index = this.findIndex(id);
+    // Using lodash
+    var index = _.findIndex(tasks, (task) => {
+      return task.id === id;
+    });
+
     if(index !== -1) {
       tasks[index].status = !tasks[index].status;
       this.setState({
@@ -226,8 +232,13 @@ class App extends Component {
     }
 
     if (keyword) {
-      tasks = tasks.filter((task) => {
-        return task.name.toLowerCase().indexOf(keyword) !== -1; // Returns -1 if the item is not found.
+      // tasks = tasks.filter((task) => {
+      //   return task.name.toLowerCase().indexOf(keyword) !== -1; // Returns -1 if the item is not found.
+      // });
+
+      // Using lodash
+      tasks = _.filter(tasks, (task) => {
+         return task.name.toLowerCase().indexOf(keyword) !== -1;
       });
     }
 
